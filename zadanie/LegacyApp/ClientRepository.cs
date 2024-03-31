@@ -9,7 +9,7 @@ namespace LegacyApp
         /// <summary>
         /// This collection is used to simulate remote database
         /// </summary>
-        public static readonly Dictionary<int, Client> Database = new Dictionary<int, Client>()
+        private static readonly Dictionary<int, Client> Database = new()
         {
             {1, new Client{ClientId = 1, Name = "Kowalski", Address = "Warszawa, Złota 12", Email = "kowalski@wp.pl", Type = "NormalClient"}},
             {2, new Client{ClientId = 2, Name = "Malewski", Address = "Warszawa, Koszykowa 86", Email = "malewski@gmail.pl", Type = "VeryImportantClient"}},
@@ -19,7 +19,7 @@ namespace LegacyApp
             {6, new Client{ClientId = 6, Name = "Andrzejewicz", Address = "Warszawa, Koszykowa 52", Email = "andrzejewicz@wp.pl", Type = "NormalClient"}}
         };
         
-        public ClientRepository()
+        private ClientRepository()
         {
         }
 
@@ -27,15 +27,15 @@ namespace LegacyApp
         /// Simulating fetching a client from remote database
         /// </summary>
         /// <returns>Returning client object</returns>
-        internal Client GetById(int clientId)
+        internal static Client GetById(int clientId)
         {
-            int randomWaitTime = new Random().Next(2000);
+            var randomWaitTime = new Random().Next(2000);
             Thread.Sleep(randomWaitTime);
 
-            if (Database.ContainsKey(clientId))
-                return Database[clientId];
+            if (Database.TryGetValue(clientId, out var client))
+                return client;
 
-            throw new ArgumentException($"User with id {clientId} does not exist in database");
+            throw new ArgumentException($"Client with id {clientId} does not exist in database");
         }
     }
 }
